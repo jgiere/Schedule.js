@@ -46,7 +46,7 @@
 				var phrase = document.getElementById('searchText').value;
 				
 				if(phrase != '') {
-					var searchResult = schedule.search('day', phrase);
+					var searchResult = schedule.search(phrase);
 					document.getElementById("listView").innerHTML = schedule.redrawView(searchResult);
 				} else {
 					document.getElementById("listView").innerHTML = schedule.redrawView(schedule.Elements);

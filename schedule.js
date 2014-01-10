@@ -136,14 +136,34 @@ Schedule.prototype.parseTemplate = function(template, elements, elementKeys) {
 	return Schedule.prototype.View;
 }
 
-Schedule.prototype.search = function (value, phrase) {
+Schedule.prototype.search = function (phrase, property) {
 	var result = [];
 	
-	for(var i = 0; i < Schedule.prototype.Elements.length; i++) {
-		var index = Schedule.prototype.Elements[i][value].search(phrase);
+	if (property != null) {
 		
-		if (index != -1) {
-			result.push(Schedule.prototype.Elements[i]);
+		//Suche nur innerhalb dieser einen Eigenschaft.
+		for(var i = 0; i < Schedule.prototype.Elements.length; i++) {
+			var index = Schedule.prototype.Elements[i][property].search(phrase);
+			
+			if (index != -1) {
+				result.push(Schedule.prototype.Elements[i]);
+			}
+		}
+	} else {
+		
+		//Suche durch alle Elemente.
+		for(var i = 0; i < Schedule.prototype.Elements.length; i++) {
+			//Da alle Eigenschaften berücksichtigt werden sollen, werden nun alle Eigenschaften durchgegangen.
+			for(var u = 0; u < Schedule.prototype.ElementKeys.length; u++) {
+				var index = Schedule.prototype.Elements[i][Schedule.prototype.ElementKeys[u]].search(phrase);
+				
+				if(index != -1) {
+					//Eine Eigenschaft wurde gefunden, diese Schleife wird nun beendet, da eine weitere Ausführung nicht notwendig ist.
+					result.push(Schedule.prototype.Elements[i]);
+					
+					u += Schedule.prototype.ElementKeys.length;
+				}
+			}
 		}
 	}
 	
