@@ -176,102 +176,53 @@ Schedule.prototype.redrawView = function (elements) {
 	return Schedule.prototype.parseTemplate(Schedule.prototype.Template, elements, Schedule.prototype.ElementKeys);
 }
 
-Schedule.prototype.sortDateAsc = function (elements, dateProperty) {
-	if(dateProperty != null) {
-		var item;
-		var sortFinished = false;
-		
-		while(!sortFinished) {
-			//Dieser Wert bei jedem Durchgang auf true gesetzt. Wird etwas geändert, wird er auf false gesetzt.
-			sortFinished = true;
+Schedule.prototype.sort = function (elements, property, options) {
+	//Bestimmte options müssen gesetzt worden sein.
+	if(property != null && options.hasOwnProperty('asc') && options.hasOwnProperty('type')) {
+		//Kontrollieren welcher Typ gesetzt wurde.
+		if(options.type == 'date' || options.type == 'time' || options.type == 'datetime') {
+			options.type = 'datetime';
+		} else if(options.type == 'string') {
 			
-			for(var i = 0; i < elements.length && i + 1 < elements.length; i++) {
-				//Wenn der erste Werte größer als der zweite Wert ist, wird getauscht.
-				if(elements[i][dateProperty] > elements[i + 1][dateProperty]) {
-					item = elements[i];
-					elements[i] = elements[i + 1];
-					elements[i + 1] = item;
-					
-					sortFinished = false;
+		} else {
+			options.type = false;
+		}
+		
+		if(options.type) {
+			//Da es sein kann, dass elements ein Verweis auf Schedule.prototype.Elements ist und sich durch die Sortierung auch deren Sortierung ändern kann, wird
+			//das Objekt hier geklont.
+			var collection = JSON.parse(JSON.stringify(elements));
+			var item;
+			var sortFinished = false;
+			
+			while(!sortFinished) {
+				//Dieser Wert bei jedem Durchgang auf true gesetzt. Wird etwas geändert, wird er auf false gesetzt.
+				sortFinished = true;
+				
+				for(var i = 0; i < collection.length && i + 1 < collection.length; i++) {
+					if(options.type == 'datetime') {				
+						if(options.asc) {
+							//Wenn der erste Werte groesser als der zweite Wert ist, wird getauscht.
+							if(collection[i][property] > collection[i + 1][property]) {
+								item = collection[i];
+								collection[i] = collection[i + 1];
+								collection[i + 1] = item;
+								sortFinished = false;
+							}
+						} else {
+							//Wenn der erste Werte kleiner als der zweite Wert ist, wird getauscht.
+							if(collection[i][property] < collection[i + 1][property]) {
+								item = collection[i];
+								collection[i] = collection[i + 1];
+								collection[i + 1] = item;
+								sortFinished = false;
+							}
+						}
+					}
 				}
 			}
-		}
-	
-		return elements;
-	}
-}
-
-Schedule.prototype.sortDateDesc = function (elements, dateProperty) {
-	if(dateProperty != null) {
-		var item;
-		var sortFinished = false;
-		
-		while(!sortFinished) {
-			//Dieser Wert bei jedem Durchgang auf true gesetzt. Wird etwas geändert, wird er auf false gesetzt.
-			sortFinished = true;
 			
-			for(var i = 0; i < elements.length && i + 1 < elements.length; i++) {
-				//Wenn der erste Werte kleiner als der zweite Wert ist, wird getauscht.
-				if(elements[i][dateProperty] < elements[i + 1][dateProperty]) {
-					item = elements[i];
-					elements[i] = elements[i + 1];
-					elements[i + 1] = item;
-					
-					sortFinished = false;
-				}
-			}
+			return collection;
 		}
-	
-		return elements;
-	}
-}
-
-Schedule.prototype.sortTimeAsc = function (elements, timeProperty) {
-	if(timeProperty != null) {
-		var item;
-		var sortFinished = false;
-		
-		while(!sortFinished) {
-			//Dieser Wert bei jedem Durchgang auf true gesetzt. Wird etwas geändert, wird er auf false gesetzt.
-			sortFinished = true;
-			
-			for(var i = 0; i < elements.length && i + 1 < elements.length; i++) {
-				//Wenn der erste Werte größer als der zweite Wert ist, wird getauscht.
-				if(elements[i][timeProperty] > elements[i + 1][timeProperty]) {
-					item = elements[i];
-					elements[i] = elements[i + 1];
-					elements[i + 1] = item;
-					
-					sortFinished = false;
-				}
-			}
-		}
-	
-		return elements;
-	}
-}
-
-Schedule.prototype.sortTimeDesc = function (elements, timeProperty) {
-	if(timeProperty != null) {
-		var item;
-		var sortFinished = false;
-		
-		while(!sortFinished) {
-			//Dieser Wert bei jedem Durchgang auf true gesetzt. Wird etwas geändert, wird er auf false gesetzt.
-			sortFinished = true;
-			
-			for(var i = 0; i < elements.length && i + 1 < elements.length; i++) {
-				//Wenn der erste Werte kleiner als der zweite Wert ist, wird getauscht.
-				if(elements[i][timeProperty] < elements[i + 1][timeProperty]) {
-					item = elements[i];
-					elements[i] = elements[i + 1];
-					elements[i + 1] = item;
-					
-					sortFinished = false;
-				}
-			}
-		}
-	
-		return elements;
 	}
 }
