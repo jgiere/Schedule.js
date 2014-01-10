@@ -1,7 +1,7 @@
 Schedule.js
 ===========
 
-A tiny library to generate and search a list.
+A tiny library to generate and search through a list.
 
 
 
