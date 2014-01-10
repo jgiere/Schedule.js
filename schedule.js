@@ -1,3 +1,7 @@
+/*
+	Developed by Johannes Giere, jogiere AT gmail DOT com
+*/
+
 Schedule.prototype.Elements = [];
 Schedule.prototype.ElementKeys = [];
 Schedule.prototype.Template = null;
@@ -14,8 +18,7 @@ function Schedule(elements, elementKeys, templateUrl) {
 	this.loadTemplate(templateUrl);
 }
 
-Schedule.prototype.loadTemplate = function (url)
-{
+Schedule.prototype.loadTemplate = function (url) {
 	var httpRequest;
 	if (window.XMLHttpRequest) { // Mozilla, Safari, ...
 		httpRequest = new XMLHttpRequest();
@@ -28,17 +31,8 @@ Schedule.prototype.loadTemplate = function (url)
 			Schedule.prototype.Template = httpRequest.responseText;
 			
 			Schedule.prototype.parseTemplate(Schedule.prototype.Template, Schedule.prototype.Elements, Schedule.prototype.ElementKeys);
-			
-			// everything is good, the response is received
-			/*
-			if (httpRequest.status === 200) {
-				var toit=true;
-			} else {
-				
-			}
-			*/
 		} else {
-			// still not ready
+			
 		}
 	};
 	
@@ -80,9 +74,14 @@ Schedule.prototype.parseTemplate = function(template, elements, elementKeys) {
 			pos += 7;
 			lastpos = template.indexOf('"', pos);
 			
-			classType = template.substr(pos, template.length - pos - (template.length - lastpos));
+			var cssClasses = template.substr(pos, template.length - pos - (template.length - lastpos));
+			var index = cssClasses.indexOf('repeat');
 			
-			if (classType == 'repeat') {
+			//Wenn der index -1 ist, haben wir den repeat-Teil gefunden.
+			if (index != -1) {
+				
+				//Lösche repeat-Klasse raus.
+				template = template.substr(0, pos) + cssClasses.replace('repeat', '') + template.substr(pos + cssClasses.length);
 				
 				//Hole den HTML-Tag, indem der Repeatbereich sich befindet.
 				var beginn = template.substr(0, pos).lastIndexOf('<') + 1;
@@ -177,4 +176,104 @@ Schedule.prototype.redrawView = function (elements) {
 	
 	
 	return Schedule.prototype.parseTemplate(Schedule.prototype.Template, elements, Schedule.prototype.ElementKeys);
+}
+
+Schedule.prototype.sortDateAsc = function (elements, dateProperty) {
+	if(dateProperty != null) {
+		var item;
+		var sortFinished = false;
+		
+		while(!sortFinished) {
+			//Dieser Wert bei jedem Durchgang auf true gesetzt. Wird etwas geändert, wird er auf false gesetzt.
+			sortFinished = true;
+			
+			for(var i = 0; i < elements.length && i + 1 < elements.length; i++) {
+				//Wenn der erste Werte größer als der zweite Wert ist, wird getauscht.
+				if(elements[i][dateProperty] > elements[i + 1][dateProperty]) {
+					item = elements[i];
+					elements[i] = elements[i + 1];
+					elements[i + 1] = item;
+					
+					sortFinished = false;
+				}
+			}
+		}
+	
+		return elements;
+	}
+}
+
+Schedule.prototype.sortDateDesc = function (elements, dateProperty) {
+	if(dateProperty != null) {
+		var item;
+		var sortFinished = false;
+		
+		while(!sortFinished) {
+			//Dieser Wert bei jedem Durchgang auf true gesetzt. Wird etwas geändert, wird er auf false gesetzt.
+			sortFinished = true;
+			
+			for(var i = 0; i < elements.length && i + 1 < elements.length; i++) {
+				//Wenn der erste Werte kleiner als der zweite Wert ist, wird getauscht.
+				if(elements[i][dateProperty] < elements[i + 1][dateProperty]) {
+					item = elements[i];
+					elements[i] = elements[i + 1];
+					elements[i + 1] = item;
+					
+					sortFinished = false;
+				}
+			}
+		}
+	
+		return elements;
+	}
+}
+
+Schedule.prototype.sortTimeAsc = function (elements, timeProperty) {
+	if(timeProperty != null) {
+		var item;
+		var sortFinished = false;
+		
+		while(!sortFinished) {
+			//Dieser Wert bei jedem Durchgang auf true gesetzt. Wird etwas geändert, wird er auf false gesetzt.
+			sortFinished = true;
+			
+			for(var i = 0; i < elements.length && i + 1 < elements.length; i++) {
+				//Wenn der erste Werte größer als der zweite Wert ist, wird getauscht.
+				if(elements[i][timeProperty] > elements[i + 1][timeProperty]) {
+					item = elements[i];
+					elements[i] = elements[i + 1];
+					elements[i + 1] = item;
+					
+					sortFinished = false;
+				}
+			}
+		}
+	
+		return elements;
+	}
+}
+
+Schedule.prototype.sortTimeDesc = function (elements, timeProperty) {
+	if(timeProperty != null) {
+		var item;
+		var sortFinished = false;
+		
+		while(!sortFinished) {
+			//Dieser Wert bei jedem Durchgang auf true gesetzt. Wird etwas geändert, wird er auf false gesetzt.
+			sortFinished = true;
+			
+			for(var i = 0; i < elements.length && i + 1 < elements.length; i++) {
+				//Wenn der erste Werte kleiner als der zweite Wert ist, wird getauscht.
+				if(elements[i][timeProperty] < elements[i + 1][timeProperty]) {
+					item = elements[i];
+					elements[i] = elements[i + 1];
+					elements[i + 1] = item;
+					
+					sortFinished = false;
+				}
+			}
+		}
+	
+		return elements;
+	}
 }

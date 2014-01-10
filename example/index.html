@@ -15,16 +15,16 @@
 			function doIt() {
 				var elements = [
 					{
-						'day': 'Mittwoch, Neujahrstag',
-						'date': '01.01.2014',
-						'time': '11:00',
-						'place': 'Kirche Sonnenberg'
-					},
-					{
 						'day': '2. Sonntag nach Weihnachten',
 						'date': '05.01.2014',
 						'time': '10:30',
 						'place': 'Kirche Timmerlah'
+					},
+					{
+						'day': 'Mittwoch, Neujahrstag',
+						'date': '01.01.2014',
+						'time': '11:00',
+						'place': 'Kirche Sonnenberg'
 					},
 					{
 						'day': '2. Sonntag nach Weihnachten',
@@ -52,10 +52,19 @@
 					document.getElementById("listView").innerHTML = schedule.redrawView(schedule.Elements);
 				}
 			}
+			
+			function sortBasedOnTimeAsc() {
+				document.getElementById("listView").innerHTML = schedule.redrawView(schedule.sortTimeAsc(schedule.Elements, 'time'));
+			}
+			function sortBasedOnTimeDesc() {
+				document.getElementById("listView").innerHTML = schedule.redrawView(schedule.sortTimeDesc(schedule.Elements, 'time'));
+			}
 		</script>
 		
 		<input type="text" placeholder="Search" id="searchText"/>
 		<button onclick="search()">Search</button>
+		<button onclick="sortBasedOnTimeAsc()">Sort on time ASC</button>
+		<button onclick="sortBasedOnTimeDesc()">Sort on time DESC</button>
 		
 		<div id="listView">
 			
