@@ -13,8 +13,6 @@ function Schedule(elements, elementKeys, templateUrl) {
 	Schedule.prototype.Elements = elements;
 	Schedule.prototype.ElementKeys = elementKeys;
 	
-	
-	
 	this.loadTemplate(templateUrl);
 }
 
@@ -169,8 +167,8 @@ Schedule.prototype.search = function (phrase, property) {
 	return result;
 }
 
-/*
- *	Accepts a new array with elements a redraws the view.
+/* Accepts a new array with elements a redraws the view.
+ *	
  */
 Schedule.prototype.redrawView = function (elements) {
 	
