@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!--
+	Developed by Johannes Giere, jogiere AT gmail DOT com
+-->
+<html lang="de">
+	<head>
+		<title></title>
+		
+		<script src="../schedule.js"></script>
+		<script src="template.html"></script>
+	</head>
+	<body onload="doIt()">
+		<script>
+			
+			function doIt() {
+				var elements = [
+					{
+						'day': 'Mittwoch, Neujahrstag',
+						'date': '01.01.2014',
+						'time': '11:00',
+						'place': 'Kirche Sonnenberg'
+					},
+					{
+						'day': '2. Sonntag nach Weihnachten',
+						'date': '05.01.2014',
+						'time': '10:30',
+						'place': 'Kirche Timmerlah'
+					},
+					{
+						'day': '2. Sonntag nach Weihnachten',
+						'date': '05.01.2014',
+						'time': '11:30',
+						'place': 'Kirche Sonnenberg'
+					}
+				];
+				
+				var elementKeys = ["day", "date", "time", "place"];
+				
+				var templateUrl = 'template.html';
+				
+				var schedule = new Schedule(elements, elementKeys, templateUrl);
+				document.getElementById("listView").innerHTML = schedule.View;
+			}
+		</script>
+		
+		<div id="listView">
+			
+		</div>
+	</body>
+</html>
