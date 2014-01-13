@@ -167,7 +167,7 @@ Schedule.prototype.search = function (phrase, property) {
 	return result;
 }
 
-/* Accepts a new array with elements a redraws the view.
+/* Accepts a new array with elements and redraws the view.
  *	
  */
 Schedule.prototype.redrawView = function (elements) {
