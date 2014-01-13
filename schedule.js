@@ -226,3 +226,13 @@ Schedule.prototype.sort = function (elements, property, options) {
 		}
 	}
 }
+
+Schedule.prototype.filter = function (filterFunction, keyType) {
+	var collection = [];
+	for(var i = 0; i < Schedule.prototype.Elements.length; i++) {
+		if(filterFunction(Schedule.prototype.Elements[i][keyType])) {
+			collection.push(Schedule.prototype.Elements[i]);
+		}
+	}
+	return collection;
+}

@@ -59,12 +59,23 @@
 			function sortBasedOnDateDesc() {
 				document.getElementById("listView").innerHTML = schedule.redrawView(schedule.sort(schedule.Elements, 'date', { asc: false, type:'datetime' } ));
 			}
+			function doFiltering() {
+				document.getElementById("listView").innerHTML = schedule.redrawView(schedule.filter(
+					function(a) {
+							if(a > '11:00') {
+								return true;
+							} else {
+								return false;
+							}
+						},
+					'time'));
+			}
 		</script>
 		
 		<input type="text" placeholder="Search" id="searchText"/>
 		<button onclick="search()">Search</button>
 		
-		
+		<button onclick="doFiltering()">Filter</button>
 		
 		<button onclick="sortBasedOnDateAsc()">Sort on time ASC</button>
 		<button onclick="sortBasedOnDateDesc()">Sort on time DESC</button>
