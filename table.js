@@ -41,19 +41,19 @@ Table.prototype.loadTemplate = function (url) {
 
 Table.prototype.parseTemplate = function(template, elements, elementKeys) {
 	
-	//Lade alle Klassen aus dem Template.
+	//Lade alle Keys aus dem Template.
 	var pos, lastpos;
 	var types = [];
 	for(var i = 0; i < template.length; i) {
 		//Durchsuche das Template nach allen Verweisen.
-		pos = template.indexOf('{{', i);
+		pos = template.indexOf('{$', i);
 		
 		if (pos != -1) {
 			//Erhöhe die Position um 2, damit die Klammern nicht miteinbezogen werden.
 			pos += 2;
-			lastpos = template.indexOf('}}', i);
+			lastpos = template.indexOf('$}', i);
 			
-			//Hole die Klasse raus und pushe sie in das Array.
+			//Hole den Key raus und pushe sie in das Array.
 			types.push(template.substr(pos, template.length - pos - (template.length - lastpos)));
 			
 			//Lege i auf eine Position hinter der gefunden Klasse.
@@ -75,7 +75,7 @@ Table.prototype.parseTemplate = function(template, elements, elementKeys) {
 			var cssClasses = template.substr(pos, template.length - pos - (template.length - lastpos));
 			var index = cssClasses.indexOf('repeat');
 			
-			//Wenn der index -1 ist, haben wir den repeat-Teil gefunden.
+			//Wenn der index nicht -1 ist, haben wir den repeat-Teil gefunden.
 			if (index != -1) {
 				
 				//Lösche repeat-Klasse raus.
@@ -117,7 +117,7 @@ Table.prototype.parseTemplate = function(template, elements, elementKeys) {
 			
 			//Gehe alle Platzhalter durch.
 			for(var index = 0; index < elementKeys.length; index++) {
-				part = part.replace('{{' + elementKeys[index] + '}}', elements[i][elementKeys[index]]);
+				part = part.replace('{$' + elementKeys[index] + '$}', elements[i][elementKeys[index]]);
 			}
 			
 			//Füge den Part dem View hinzu.
