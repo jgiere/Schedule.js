@@ -6,7 +6,7 @@
 	<head>
 		<title></title>
 		
-		<script src="../schedule.js"></script>
+		<script src="../table.js"></script>
 		<script src="template.html"></script>
 	</head>
 	<body onload="doIt()">
@@ -38,29 +38,29 @@
 				
 				var templateUrl = 'template.html';
 				
-				schedule = new Schedule(elements, elementKeys, templateUrl);
-				document.getElementById("listView").innerHTML = schedule.View;
+				table = new Table(elements, elementKeys, templateUrl);
+				document.getElementById("listView").innerHTML = table.View;
 			}
 			
 			function search() {
 				var phrase = document.getElementById('searchText').value;
 				
 				if(phrase != '') {
-					var searchResult = schedule.search(phrase);
-					document.getElementById("listView").innerHTML = schedule.redrawView(searchResult);
+					var searchResult = table.search(phrase);
+					document.getElementById("listView").innerHTML = table.redrawView(searchResult);
 				} else {
-					document.getElementById("listView").innerHTML = schedule.redrawView(schedule.Elements);
+					document.getElementById("listView").innerHTML = table.redrawView(table.Elements);
 				}
 			}
 			
 			function sortBasedOnDateAsc() {
-				document.getElementById("listView").innerHTML = schedule.redrawView(schedule.sort(schedule.Elements, 'date', { asc: true, type:'datetime' } ));
+				document.getElementById("listView").innerHTML = table.redrawView(table.sort(table.Elements, 'date', { asc: true, type:'datetime' } ));
 			}
 			function sortBasedOnDateDesc() {
-				document.getElementById("listView").innerHTML = schedule.redrawView(schedule.sort(schedule.Elements, 'date', { asc: false, type:'datetime' } ));
+				document.getElementById("listView").innerHTML = table.redrawView(table.sort(table.Elements, 'date', { asc: false, type:'datetime' } ));
 			}
 			function doFiltering() {
-				document.getElementById("listView").innerHTML = schedule.redrawView(schedule.filter(
+				document.getElementById("listView").innerHTML = table.redrawView(table.filter(
 					function(a) {
 							if(a > '11:00') {
 								return true;

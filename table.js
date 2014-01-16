@@ -2,21 +2,21 @@
 	Developed by Johannes Giere, jogiere AT gmail DOT com
 */
 
-Schedule.prototype.Elements = [];
-Schedule.prototype.ElementKeys = [];
-Schedule.prototype.Template = null;
+Table.prototype.Elements = [];
+Table.prototype.ElementKeys = [];
+Table.prototype.Template = null;
 
-Schedule.prototype.View = null;
+Table.prototype.View = null;
 
-function Schedule(elements, elementKeys, templateUrl) {
+function Table(elements, elementKeys, templateUrl) {
 	
-	Schedule.prototype.Elements = elements;
-	Schedule.prototype.ElementKeys = elementKeys;
+	Table.prototype.Elements = elements;
+	Table.prototype.ElementKeys = elementKeys;
 	
 	this.loadTemplate(templateUrl);
 }
 
-Schedule.prototype.loadTemplate = function (url) {
+Table.prototype.loadTemplate = function (url) {
 	var httpRequest;
 	if (window.XMLHttpRequest) { // Mozilla, Safari, ...
 		httpRequest = new XMLHttpRequest();
@@ -26,9 +26,9 @@ Schedule.prototype.loadTemplate = function (url) {
 	
 	httpRequest.onreadystatechange = function() {
 		if (httpRequest.readyState === 4) {
-			Schedule.prototype.Template = httpRequest.responseText;
+			Table.prototype.Template = httpRequest.responseText;
 			
-			Schedule.prototype.parseTemplate(Schedule.prototype.Template, Schedule.prototype.Elements, Schedule.prototype.ElementKeys);
+			Table.prototype.parseTemplate(Table.prototype.Template, Table.prototype.Elements, Table.prototype.ElementKeys);
 		} else {
 			
 		}
@@ -39,7 +39,7 @@ Schedule.prototype.loadTemplate = function (url) {
 	httpRequest.send(null);
 }
 
-Schedule.prototype.parseTemplate = function(template, elements, elementKeys) {
+Table.prototype.parseTemplate = function(template, elements, elementKeys) {
 	
 	//Lade alle Klassen aus dem Template.
 	var pos, lastpos;
@@ -128,37 +128,37 @@ Schedule.prototype.parseTemplate = function(template, elements, elementKeys) {
 	}
 	
 	//Füge den View ins Objekt.
-	Schedule.prototype.View = view;
+	Table.prototype.View = view;
 	
-	return Schedule.prototype.View;
+	return Table.prototype.View;
 }
 
-Schedule.prototype.search = function (phrase, property) {
+Table.prototype.search = function (phrase, property) {
 	var result = [];
 	
 	if (property != null) {
 		
 		//Suche nur innerhalb dieser einen Eigenschaft.
-		for(var i = 0; i < Schedule.prototype.Elements.length; i++) {
-			var index = Schedule.prototype.Elements[i][property].search(phrase);
+		for(var i = 0; i < Table.prototype.Elements.length; i++) {
+			var index = Table.prototype.Elements[i][property].search(phrase);
 			
 			if (index != -1) {
-				result.push(Schedule.prototype.Elements[i]);
+				result.push(Table.prototype.Elements[i]);
 			}
 		}
 	} else {
 		
 		//Suche durch alle Elemente.
-		for(var i = 0; i < Schedule.prototype.Elements.length; i++) {
+		for(var i = 0; i < Table.prototype.Elements.length; i++) {
 			//Da alle Eigenschaften berücksichtigt werden sollen, werden nun alle Eigenschaften durchgegangen.
-			for(var u = 0; u < Schedule.prototype.ElementKeys.length; u++) {
-				var index = Schedule.prototype.Elements[i][Schedule.prototype.ElementKeys[u]].search(phrase);
+			for(var u = 0; u < Table.prototype.ElementKeys.length; u++) {
+				var index = Table.prototype.Elements[i][Table.prototype.ElementKeys[u]].search(phrase);
 				
 				if(index != -1) {
 					//Eine Eigenschaft wurde gefunden, diese Schleife wird nun beendet, da eine weitere Ausführung nicht notwendig ist.
-					result.push(Schedule.prototype.Elements[i]);
+					result.push(Table.prototype.Elements[i]);
 					
-					u += Schedule.prototype.ElementKeys.length;
+					u += Table.prototype.ElementKeys.length;
 				}
 			}
 		}
@@ -170,13 +170,13 @@ Schedule.prototype.search = function (phrase, property) {
 /* Accepts a new array with elements and redraws the view.
  *	
  */
-Schedule.prototype.redrawView = function (elements) {
+Table.prototype.redrawView = function (elements) {
 	
 	
-	return Schedule.prototype.parseTemplate(Schedule.prototype.Template, elements, Schedule.prototype.ElementKeys);
+	return Table.prototype.parseTemplate(Table.prototype.Template, elements, Table.prototype.ElementKeys);
 }
 
-Schedule.prototype.sort = function (elements, property, options) {
+Table.prototype.sort = function (elements, property, options) {
 	//Bestimmte options müssen gesetzt worden sein.
 	if(property != null && options.hasOwnProperty('asc') && options.hasOwnProperty('type')) {
 		//Kontrollieren welcher Typ gesetzt wurde.
@@ -189,7 +189,7 @@ Schedule.prototype.sort = function (elements, property, options) {
 		}
 		
 		if(options.type) {
-			//Da es sein kann, dass elements ein Verweis auf Schedule.prototype.Elements ist und sich durch die Sortierung auch deren Sortierung ändern kann, wird
+			//Da es sein kann, dass elements ein Verweis auf Table.prototype.Elements ist und sich durch die Sortierung auch deren Sortierung ändern kann, wird
 			//das Objekt hier geklont.
 			var collection = JSON.parse(JSON.stringify(elements));
 			var item;
@@ -227,11 +227,11 @@ Schedule.prototype.sort = function (elements, property, options) {
 	}
 }
 
-Schedule.prototype.filter = function (filterFunction, keyType) {
+Table.prototype.filter = function (filterFunction, keyType) {
 	var collection = [];
-	for(var i = 0; i < Schedule.prototype.Elements.length; i++) {
-		if(filterFunction(Schedule.prototype.Elements[i][keyType])) {
-			collection.push(Schedule.prototype.Elements[i]);
+	for(var i = 0; i < Table.prototype.Elements.length; i++) {
+		if(filterFunction(Table.prototype.Elements[i][keyType])) {
+			collection.push(Table.prototype.Elements[i]);
 		}
 	}
 	return collection;
