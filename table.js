@@ -22,6 +22,7 @@ function Table(elementKeys, options) {
 			Table.prototype.ElementKeys = elementKeys;
 			
 			this.loadHtml();
+			Table.prototype.parseTemplate(Table.prototype.Template, Table.prototype.Elements, Table.prototype.ElementKeys);
 		} else {
 			print('You forgot to specify options');
 		}
@@ -64,7 +65,11 @@ Table.prototype.loadHtml = function () {
 									'{$' + Table.prototype.ElementKeys[v] + '$}'
 								);
 								
-								'<ul>'.concat(Table.prototype.Template).concat('</ul>');
+								if(list.children[i].nodeName == 'LI') {
+									'<ul>'.concat(Table.prototype.Template).concat('</ul>');
+								} else if(list.children[i].nodeName == 'TR') {
+									'<table>'.concat(Table.prototype.Template).concat('</table>');
+								}
 							}
 							
 							Table.prototype.Elements.push(newObject);
