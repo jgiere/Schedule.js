@@ -7,38 +7,16 @@
 		<title></title>
 		
 		<script src="../table.js"></script>
-		<script src="template.html"></script>
 	</head>
 	<body onload="doIt()">
 		<script>
 			
 			function doIt() {
-				var elements = [
-					{
-						'day': '2. Sonntag nach Weihnachten',
-						'date': '05.01.2014',
-						'time': '10:30',
-						'place': 'Kirche Timmerlah'
-					},
-					{
-						'day': 'Mittwoch, Neujahrstag',
-						'date': '01.01.2014',
-						'time': '11:00',
-						'place': 'Kirche Sonnenberg'
-					},
-					{
-						'day': '2. Sonntag nach Weihnachten',
-						'date': '05.01.2014',
-						'time': '11:30',
-						'place': 'Kirche Sonnenberg'
-					}
-				];
+
 				
 				var elementKeys = ["day", "date", "time", "place"];
 				
-				var templateUrl = 'template.html';
-				
-				table = new Table(elements, elementKeys, templateUrl);
+				table = new Table(elementKeys, {});
 				document.getElementById("listView").innerHTML = table.View;
 			}
 			
@@ -52,6 +30,7 @@
 					document.getElementById("listView").innerHTML = table.redrawView(table.Elements);
 				}
 			}
+			
 			
 			function sortBasedOnDateAsc() {
 				document.getElementById("listView").innerHTML = table.redrawView(table.sort(table.Elements, 'date', { asc: true, type:'datetime' } ));
@@ -80,9 +59,39 @@
 		<button onclick="sortBasedOnDateAsc()">Sort on time ASC</button>
 		<button onclick="sortBasedOnDateDesc()">Sort on time DESC</button>
 		
+				<!--var elements = [
+					{
+						'day': '2. Sonntag nach Weihnachten',
+						'date': '05.01.2014',
+						'time': '10:30',
+						'place': 'Kirche Timmerlah'
+					},
+					{
+						'day': 'Mittwoch, Neujahrstag',
+						'date': '01.01.2014',
+						'time': '11:00',
+						'place': 'Kirche Sonnenberg'
+					},
+					{
+						'day': '2. Sonntag nach Weihnachten',
+						'date': '05.01.2014',
+						'time': '11:30',
+						'place': 'Kirche Sonnenberg'
+					}
+				];-->
 		
 		<div id="listView">
-			
+			<ul class="repeat">
+				<li class="day">
+					<span>2. Sonntag nach Weihnachten</span>
+				</li>
+				<li class="day">
+					<span>Mittwoch, Neujahrstag</span>
+				</li>
+				<li class="day">
+					<span>3. Sonntag nach Weihnachten</span>
+				</li>
+			</ul>
 		</div>
 	</body>
 </html>

@@ -8,12 +8,78 @@ Table.prototype.Template = null;
 
 Table.prototype.View = null;
 
-function Table(elements, elementKeys, templateUrl) {
+function Table(elementKeys, options) {
 	
-	Table.prototype.Elements = elements;
-	Table.prototype.ElementKeys = elementKeys;
+	if(elementKeys != null) {
+		if(options['elements'] != null && options['templateUrl'] != null) {
+			// Will be executed when elements get passed through the options.
+			Table.prototype.Elements = elements;
+			Table.prototype.ElementKeys = elementKeys;
+			
+			this.loadTemplate(templateUrl);
+		} else if(options['elements'] == null && options['templateUrl'] == null) {
+			// Will be executed when the elements exist as a ready table or list.
+			Table.prototype.ElementKeys = elementKeys;
+			
+			this.loadHtml();
+		} else {
+			print('You forgot to specify options');
+		}
+	} else {
+		print('No element keys specified');
+	}
+}
+
+Table.prototype.loadHtml = function () {
+	var temp = '';
+	var list = document.getElementsByClassName('repeat');
 	
-	this.loadTemplate(templateUrl);
+	if(list[0] != null) {
+		// Das Listelement ist gefunden.
+		list = list[0];
+		
+		//In dieses Array werden fertige Objekte gesteckt.
+		var collection = [];
+		
+		// Innerhalb dieses Listelements gibt es einige "li", diese gehen wir durch.
+		for(var i = 0; i < list.childElementCount; i++) {
+			
+			// Dadrin suchen wir uns die Einträge auf die eigentlichen Werte. Diese enthalten die Klassen, an die wir sie identifizieren können.
+			//for(var u = 0; u < list.children[i]; u++) {
+				var childElement = list.children[i].children[0];
+				
+				var newObject = {};
+				for(var v = 0; v < Table.prototype.ElementKeys.length; v++) {
+					//Nun gehen wir jede Klasse der classList durch, um eine passende Klasse zu finden.
+					for(var classCounter = 0; classCounter < list.children[i].classList.length; classCounter++) {
+						if(list.children[i].classList[classCounter] == Table.prototype.ElementKeys[v]) {
+							
+							newObject[Table.prototype.ElementKeys[v]] = childElement.textContent;
+							
+							if(Table.prototype.Template == null) {
+								list.children[i].className = 'repeat';
+								Table.prototype.Template = list.children[i].outerHTML;
+								Table.prototype.Template = Table.prototype.Template.replace(
+									childElement.textContent, 
+									'{$' + Table.prototype.ElementKeys[v] + '$}'
+								);
+								
+								'<ul>'.concat(Table.prototype.Template).concat('</ul>');
+							}
+							
+							Table.prototype.Elements.push(newObject);
+							
+							break;
+						}
+					}
+				}
+				
+				
+			//}
+		}
+	}
+	
+
 }
 
 Table.prototype.loadTemplate = function (url) {
@@ -66,7 +132,9 @@ Table.prototype.parseTemplate = function(template, elements, elementKeys) {
 	//Lade den repeat Bereich.
 	var classType, repeatSection;
 	for(var i = 0; i < template.length; i) {
-		pos = template.indexOf('class="')
+		pos = template.indexOf('class="');
+		
+		
 		
 		if (pos != -1) {
 			pos += 7;
@@ -152,13 +220,18 @@ Table.prototype.search = function (phrase, property) {
 		for(var i = 0; i < Table.prototype.Elements.length; i++) {
 			//Da alle Eigenschaften berücksichtigt werden sollen, werden nun alle Eigenschaften durchgegangen.
 			for(var u = 0; u < Table.prototype.ElementKeys.length; u++) {
-				var index = Table.prototype.Elements[i][Table.prototype.ElementKeys[u]].search(phrase);
-				
-				if(index != -1) {
-					//Eine Eigenschaft wurde gefunden, diese Schleife wird nun beendet, da eine weitere Ausführung nicht notwendig ist.
-					result.push(Table.prototype.Elements[i]);
+				if (typeof Table.prototype.Elements[i][Table.prototype.ElementKeys[u]] === "undefined") {
 					
-					u += Table.prototype.ElementKeys.length;
+				} else {
+				
+					var index = Table.prototype.Elements[i][Table.prototype.ElementKeys[u]].toLowerCase().search(phrase.toLowerCase());
+					
+					if(index != -1) {
+						//Eine Eigenschaft wurde gefunden, diese Schleife wird nun beendet, da eine weitere Ausführung nicht notwendig ist.
+						result.push(Table.prototype.Elements[i]);
+						
+						u += Table.prototype.ElementKeys.length;
+					}
 				}
 			}
 		}
