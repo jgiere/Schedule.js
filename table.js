@@ -13,10 +13,10 @@ function Table(elementKeys, options) {
 	if(elementKeys != null) {
 		if(options['elements'] != null && options['templateUrl'] != null) {
 			// Will be executed when elements get passed through the options.
-			Table.prototype.Elements = elements;
+			Table.prototype.Elements = options['elements'];
 			Table.prototype.ElementKeys = elementKeys;
 			
-			this.loadTemplate(templateUrl);
+			this.loadTemplate(options['templateUrl']);
 		} else if(options['elements'] == null && options['templateUrl'] == null) {
 			// Will be executed when the elements exist as a ready table or list.
 			Table.prototype.ElementKeys = elementKeys;
