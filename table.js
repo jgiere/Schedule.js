@@ -22,79 +22,70 @@ function Table(elementKeys, options) {
 			Table.prototype.ElementKeys = elementKeys;
 			
 			this.loadHtml();
+			
 			Table.prototype.parseTemplate(Table.prototype.Template, Table.prototype.Elements, Table.prototype.ElementKeys);
 		} else {
-			print('You forgot to specify options');
+			console.log('Cannot load template url, parse template or find your specified template.');
 		}
 	} else {
-		print('No element keys specified');
+		console.log('No element keys specified');
 	}
 }
 
-Table.prototype.loadHtml = function () {
-	var temp = '';
-	var list = document.getElementsByClassName('repeat');
+/* Loads the table or ul from parent html file
+ */
+Table.prototype.loadHtml = function() {
+	var section = document.getElementsByClassName('repeat')[0];
 	
-	if(list[0] != null) {
-		// Das Listelement ist gefunden.
-		list = list[0];
+	var collection = {};
+	var template = '';
+	if(section.tagName == 'TABLE') {
+		var rows = section.getElementsByTagName('tr');
 		
-		//In dieses Array werden fertige Objekte gesteckt.
-		var collection = [];
-		
-		// Innerhalb dieses Listelements gibt es einige "li", diese gehen wir durch.
-		for(var i = 0; i < list.childElementCount; i++) {
-			
-			// Dadrin suchen wir uns die Einträge auf die eigentlichen Werte. Diese enthalten die Klassen, an die wir sie identifizieren können.
-			//for(var u = 0; u < list.children[i]; u++) {
-				var childElement = list.children[i].children[0];
-				
-				var newObject = {};
-				for(var v = 0; v < Table.prototype.ElementKeys.length; v++) {
-					//Nun gehen wir jede Klasse der classList durch, um eine passende Klasse zu finden.
-					for(var classCounter = 0; classCounter < list.children[i].classList.length; classCounter++) {
-						if(list.children[i].classList[classCounter] == Table.prototype.ElementKeys[v]) {
-							
-							newObject[Table.prototype.ElementKeys[v]] = childElement.textContent;
-							
-							if(Table.prototype.Template == null) {
-								list.children[i].className = 'repeat';
-								Table.prototype.Template = list.children[i].outerHTML;
-								Table.prototype.Template = Table.prototype.Template.replace(
-									childElement.textContent, 
-									'{$' + Table.prototype.ElementKeys[v] + '$}'
-								);
-								
-								if(list.children[i].nodeName == 'LI') {
-									'<ul>'.concat(Table.prototype.Template).concat('</ul>');
-								} else if(list.children[i].nodeName == 'TR') {
-									'<table>'.concat(Table.prototype.Template).concat('</table>');
-								}
-							}
-							
-							Table.prototype.Elements.push(newObject);
-							
-							break;
-						}
-					}
-				}
-				
-				
-			//}
+		//Create template
+		var template = '<table class=\"repeat\">';
+		template += '<tr>';
+		for(var i = 0; i < this.ElementKeys.length; i++) {
+			template += '<td>';
+			template += '{$' + this.ElementKeys[i] + '$}';
+			template += '</td>';
 		}
+		template += '</tr>';
+		template += '</table>';
+		
+		
+		//Read all elements
+		for(var i = 0; i < rows.length; i++) {
+			
+			var element = {};
+			for(var u = 0; u < this.ElementKeys.length; u++) {
+				if(rows[i].getElementsByClassName(this.ElementKeys[u]).length == 1) {
+					element[this.ElementKeys[u]] = rows[i].getElementsByClassName(this.ElementKeys[u])[0].textContent;
+				}
+			}
+			
+			collection[i] = element;
+		}
+	} else if(section.tagName == 'UL') {
+		
 	}
 	
-
+	Table.prototype.Template = template;
+	Table.prototype.Elements = collection;
 }
 
+/* Loads template from specified url with http get call (ajax).
+ * 
+ */
 Table.prototype.loadTemplate = function (url) {
 	var httpRequest;
-	if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+	if (window.XMLHttpRequest) {
 		httpRequest = new XMLHttpRequest();
-	} else if (window.ActiveXObject) { // IE 8 and older
+	} else if (window.ActiveXObject) {
 		httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
 	}
 	
+	//Parsing template after fetching it.
 	httpRequest.onreadystatechange = function() {
 		if (httpRequest.readyState === 4) {
 			Table.prototype.Template = httpRequest.responseText;
@@ -105,41 +96,42 @@ Table.prototype.loadTemplate = function (url) {
 		}
 	};
 	
+	//Request the specified template via HTTP-GET call.
     httpRequest.open("GET", url, false);
 	httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 	httpRequest.send(null);
 }
 
+/* Parse the template, create a view, analyse template.
+ */
 Table.prototype.parseTemplate = function(template, elements, elementKeys) {
 	
-	//Lade alle Keys aus dem Template.
+	//Find keys in template
 	var pos, lastpos;
 	var types = [];
 	for(var i = 0; i < template.length; i) {
-		//Durchsuche das Template nach allen Verweisen.
+		//Search template after all keys
 		pos = template.indexOf('{$', i);
 		
 		if (pos != -1) {
-			//Erhöhe die Position um 2, damit die Klammern nicht miteinbezogen werden.
+			//Increase position with 2, so that '{$' will not be used in keyword.
 			pos += 2;
 			lastpos = template.indexOf('$}', i);
 			
-			//Hole den Key raus und pushe sie in das Array.
+			//Get key and put into array.
 			types.push(template.substr(pos, template.length - pos - (template.length - lastpos)));
 			
-			//Lege i auf eine Position hinter der gefunden Klasse.
+			//Increase position with 2, so that searching continues after key.
 			i = lastpos + 2;
 		} else {
 			i = template.length;
 		}
 	}
 	
-	//Lade den repeat Bereich.
+	//Load repeat section
 	var classType, repeatSection;
 	for(var i = 0; i < template.length; i) {
 		pos = template.indexOf('class="');
-		
-		
 		
 		if (pos != -1) {
 			pos += 7;
@@ -148,21 +140,21 @@ Table.prototype.parseTemplate = function(template, elements, elementKeys) {
 			var cssClasses = template.substr(pos, template.length - pos - (template.length - lastpos));
 			var index = cssClasses.indexOf('repeat');
 			
-			//Wenn der index nicht -1 ist, haben wir den repeat-Teil gefunden.
+			//If index is -1, we have found the repeat section
 			if (index != -1) {
 				
-				//Lösche repeat-Klasse raus.
+				//Delete repeat-Class
 				template = template.substr(0, pos) + cssClasses.replace('repeat', '') + template.substr(pos + cssClasses.length);
 				
-				//Hole den HTML-Tag, indem der Repeatbereich sich befindet.
+				//Get HTML tag inside of repeat section.
 				var beginn = template.substr(0, pos).lastIndexOf('<') + 1;
 				var laenge = template.substr(beginn, template.length - beginn).indexOf(' ');
 				var tag = template.substr(beginn, laenge);
 				
-				//Ermittel den zugehörigen Endtag aus dem Tag und hole dadurch die Länge des Repeatbereichs.
+				//Find out the closing tag and get the length of the repeat section.
 				laenge = template.substr(beginn, template.length - beginn).indexOf('</' + tag + '>') + 4 + tag.length;
 				
-				//Bilde den Repeatbereich als String.
+				//Build repeat section as object with text as content
 				repeatSection = {
 					'start' : beginn - 1,
 					'length' : laenge,
@@ -177,41 +169,43 @@ Table.prototype.parseTemplate = function(template, elements, elementKeys) {
 		}
 	}
 	
-	//Fülle das View.
+	//Fill view
 	var view;
 	if(repeatSection != null) {
-		//Lösche den Repeatbereich aus dem Template.
+		//Delete repeat section from template.
 		view = template.substr(0, repeatSection.start) + template.substr(repeatSection.start + repeatSection.length);
 		
 		var pos = repeatSection.start;
 		for(var i = 0; i < elements.length; i++) {
-			//Ersetze alle Platzhalter durch die Werte.
+			//Replace placeholder with value
 			var part = repeatSection.text;
 			
-			//Gehe alle Platzhalter durch.
+			//Iterate every placeholder
 			for(var index = 0; index < elementKeys.length; index++) {
 				part = part.replace('{$' + elementKeys[index] + '$}', elements[i][elementKeys[index]]);
 			}
 			
-			//Füge den Part dem View hinzu.
+			//Add new part to view.
 			view = view.substr(0, pos) + part + view.substr(pos);
 			
 			pos += part.length;
 		}
 	}
 	
-	//Füge den View ins Objekt.
+	//Deploy view.
 	Table.prototype.View = view;
 	
 	return Table.prototype.View;
 }
 
+/* Perform a search
+ */
 Table.prototype.search = function (phrase, property) {
 	var result = [];
 	
 	if (property != null) {
 		
-		//Suche nur innerhalb dieser einen Eigenschaft.
+		//Perform a search for a specific property only.
 		for(var i = 0; i < Table.prototype.Elements.length; i++) {
 			var index = Table.prototype.Elements[i][property].search(phrase);
 			
@@ -221,9 +215,9 @@ Table.prototype.search = function (phrase, property) {
 		}
 	} else {
 		
-		//Suche durch alle Elemente.
+		//Search every element
 		for(var i = 0; i < Table.prototype.Elements.length; i++) {
-			//Da alle Eigenschaften berücksichtigt werden sollen, werden nun alle Eigenschaften durchgegangen.
+			//Iterate every property.
 			for(var u = 0; u < Table.prototype.ElementKeys.length; u++) {
 				if (typeof Table.prototype.Elements[i][Table.prototype.ElementKeys[u]] === "undefined") {
 					
@@ -232,7 +226,7 @@ Table.prototype.search = function (phrase, property) {
 					var index = Table.prototype.Elements[i][Table.prototype.ElementKeys[u]].toLowerCase().search(phrase.toLowerCase());
 					
 					if(index != -1) {
-						//Eine Eigenschaft wurde gefunden, diese Schleife wird nun beendet, da eine weitere Ausführung nicht notwendig ist.
+						//A property has been found, so the loop can be stopped.
 						result.push(Table.prototype.Elements[i]);
 						
 						u += Table.prototype.ElementKeys.length;
@@ -249,15 +243,15 @@ Table.prototype.search = function (phrase, property) {
  *	
  */
 Table.prototype.redrawView = function (elements) {
-	
-	
 	return Table.prototype.parseTemplate(Table.prototype.Template, elements, Table.prototype.ElementKeys);
 }
 
+/* Sorts every element and returns a view
+ */
 Table.prototype.sort = function (elements, property, options) {
-	//Bestimmte options müssen gesetzt worden sein.
+	//Check if specific options has been set.
 	if(property != null && options.hasOwnProperty('asc') && options.hasOwnProperty('type')) {
-		//Kontrollieren welcher Typ gesetzt wurde.
+		//Check which type has been set.
 		if(options.type == 'date' || options.type == 'time' || options.type == 'datetime') {
 			options.type = 'datetime';
 		} else if(options.type == 'string') {
@@ -267,20 +261,19 @@ Table.prototype.sort = function (elements, property, options) {
 		}
 		
 		if(options.type) {
-			//Da es sein kann, dass elements ein Verweis auf Table.prototype.Elements ist und sich durch die Sortierung auch deren Sortierung ändern kann, wird
-			//das Objekt hier geklont.
+			//Because elements could be a pointer to Table.prototype.Elements and their elemtent's position can be altered through this process, the object will be cloned.
 			var collection = JSON.parse(JSON.stringify(elements));
 			var item;
 			var sortFinished = false;
 			
 			while(!sortFinished) {
-				//Dieser Wert bei jedem Durchgang auf true gesetzt. Wird etwas geändert, wird er auf false gesetzt.
+				//This Value is set on true at every iteration. If something different occurres, it will be set on false.
 				sortFinished = true;
 				
 				for(var i = 0; i < collection.length && i + 1 < collection.length; i++) {
 					if(options.type == 'datetime') {				
 						if(options.asc) {
-							//Wenn der erste Werte groesser als der zweite Wert ist, wird getauscht.
+							//If first value is greater than second value, switch them.
 							if(collection[i][property] > collection[i + 1][property]) {
 								item = collection[i];
 								collection[i] = collection[i + 1];
@@ -288,7 +281,7 @@ Table.prototype.sort = function (elements, property, options) {
 								sortFinished = false;
 							}
 						} else {
-							//Wenn der erste Werte kleiner als der zweite Wert ist, wird getauscht.
+							//If first value is smaller that second value, switch them.
 							if(collection[i][property] < collection[i + 1][property]) {
 								item = collection[i];
 								collection[i] = collection[i + 1];
@@ -305,6 +298,8 @@ Table.prototype.sort = function (elements, property, options) {
 	}
 }
 
+/* Provide your own filterFuntion to filter on your own.
+ */
 Table.prototype.filter = function (filterFunction, keyType) {
 	var collection = [];
 	for(var i = 0; i < Table.prototype.Elements.length; i++) {
