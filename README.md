@@ -11,15 +11,14 @@ A more detailed description and tutorial will follow soon.
 
 Take a look at the (rudimentary) example to see how it works.
 
-Please notice that Table.js is <b>draft and not stable</b>. If you notice any bugs, please let me know.
+Please notice that Table.js has not been tested in production. If you notice any bugs, please let me know.
 
 
     Copyright (C) 2015  Johannes Giere
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
