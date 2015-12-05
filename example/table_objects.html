@@ -5,46 +5,52 @@
 <html lang="de">
 	<head>
 		<title></title>
-		
+
 		<script src="../table.js"></script>
 		<script src="template.html"></script>
 	</head>
 	<body onload="doIt()">
 		<script>
-			
+
 			function doIt() {
 				var elements = [
 					{
 						'day': '2. Sunday after Christmas',
-						'date': '05.01.2014',
+						'date': '26.12.2015',
 						'time': '10:30',
 						'place': 'Church Timmerlah'
 					},
 					{
 						'day': 'New Years Eve',
-						'date': '01.01.2014',
-						'time': '11:00',
+						'date': '31.12.2015',
+						'time': '19:00',
 						'place': 'Church Sonnenberg'
 					},
 					{
-						'day': '2. Sunday after Christmas',
-						'date': '05.01.2014',
+						'day': '1. Sunday after Christmas',
+						'date': '25.12.2015',
 						'time': '11:30',
+						'place': 'Church Sonnenberg'
+					},
+					{
+						'day': 'Christmas Eve',
+						'date': '24.12.2015',
+						'time': '18:30',
 						'place': 'Church Sonnenberg'
 					}
 				];
-				
+
 				var elementKeys = ["day", "date", "time", "place"];
-				
+
 				var templateUrl = 'template.html';
-				
+
 				table = new Table(elementKeys, { 'elements': elements, 'templateUrl': templateUrl } );
 				document.getElementById("listView").innerHTML = table.View;
 			}
-			
+
 			function search() {
 				var phrase = document.getElementById('searchText').value;
-				
+
 				if(phrase != '') {
 					var searchResult = table.search(phrase);
 					document.getElementById("listView").innerHTML = table.redrawView(searchResult);
@@ -52,7 +58,7 @@
 					document.getElementById("listView").innerHTML = table.redrawView(table.Elements);
 				}
 			}
-			
+
 			function sortBasedOnDateAsc() {
 				document.getElementById("listView").innerHTML = table.redrawView(table.sort(table.Elements, 'date', { asc: true, type:'datetime' } ));
 			}
@@ -71,18 +77,18 @@
 					'time'));
 			}
 		</script>
-		
+
 		<input type="text" placeholder="Search" id="searchText"/>
 		<button onclick="search()">Search</button>
-		
+		----
 		<button onclick="doFiltering()">Filter</button>
-		
+
 		<button onclick="sortBasedOnDateAsc()">Sort on time ASC</button>
 		<button onclick="sortBasedOnDateDesc()">Sort on time DESC</button>
-		
-		
+
+
 		<div id="listView">
-			
+
 		</div>
 	</body>
 </html>
