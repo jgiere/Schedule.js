@@ -47,7 +47,7 @@ function Table(elementKeys, options) {
 Table.prototype.loadHtml = function() {
 	var section = document.getElementsByClassName('repeat')[0];
 
-	var collection = {};
+	var collection = [];
 	var template = '';
 	if(section.tagName == 'TABLE') {
 		var rows = section.getElementsByTagName('tr');

@@ -5,24 +5,24 @@
 <html lang="de">
 	<head>
 		<title></title>
-		
+
 		<script src="../table.js"></script>
 	</head>
 	<body onload="doIt()">
 		<script>
-			
+
 			function doIt() {
 
-				
-				var elementKeys = ["day", "date", "time", "place"];
-				
+
+				var elementKeys = ["day"];
+
 				table = new Table(elementKeys, {});
 				document.getElementById("listView").innerHTML = table.View;
 			}
-			
+
 			function search() {
 				var phrase = document.getElementById('searchText').value;
-				
+
 				if(phrase != '') {
 					var searchResult = table.search(phrase);
 					document.getElementById("listView").innerHTML = table.redrawView(searchResult);
@@ -30,8 +30,8 @@
 					document.getElementById("listView").innerHTML = table.redrawView(table.Elements);
 				}
 			}
-			
-			
+
+
 			function sortBasedOnDateAsc() {
 				document.getElementById("listView").innerHTML = table.redrawView(table.sort(table.Elements, 'date', { asc: true, type:'datetime' } ));
 			}
@@ -50,15 +50,15 @@
 					'time'));
 			}
 		</script>
-		
+
 		<input type="text" placeholder="Search" id="searchText"/>
 		<button onclick="search()">Search</button>
-		
+
 		<button onclick="doFiltering()">Filter</button>
-		
+
 		<button onclick="sortBasedOnDateAsc()">Sort on time ASC</button>
 		<button onclick="sortBasedOnDateDesc()">Sort on time DESC</button>
-		
+
 				<!--var elements = [
 					{
 						'day': '2. Sonntag nach Weihnachten',
@@ -79,7 +79,7 @@
 						'place': 'Kirche Sonnenberg'
 					}
 				];-->
-		
+
 		<div id="listView">
 			<!--<ul class="repeat">
 				<li class="day">
@@ -98,6 +98,9 @@
 				</tr>
 				<tr>
 					<td class="day">Zweiter Tag</td>
+				</tr>
+				<tr>
+					<td class="day">Dritter Tag</td>
 				</tr>
 			</table>
 		</div>
