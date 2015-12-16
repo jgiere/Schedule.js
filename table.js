@@ -77,7 +77,36 @@ Table.prototype.loadHtml = function() {
 			collection[i] = element;
 		}
 	} else if(section.tagName == 'UL') {
+		var rows = section.getElementsByTagName('li');
 
+		//Create template
+		template = '<ul class=\"repeat ';
+
+		//Add used classes in the template.
+		for(var i = 0; i < section.classList.length; i++) {
+			template += section.classList[i] + ' ';
+		}
+
+		template += '\">';
+
+		for(var i = 0; i < this.ElementKeys.length; i++) {
+			template += '<li>';
+			template += '{$' + this.ElementKeys[i] + '$}';
+			template += '</li>';
+		}
+		template += '</ul>';
+
+
+		//Read all elements
+		for(var i = 0; i < rows.length; i++) {
+
+			var element = {};
+			for(var u = 0; u < this.ElementKeys.length; u++) {
+					element[this.ElementKeys[u]] = rows[i].children[0].textContent;
+			}
+
+			collection[i] = element;
+		}
 	}
 
 	Table.prototype.Template = template;
