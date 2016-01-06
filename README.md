@@ -14,7 +14,7 @@ Take a look at the (rudimentary) example to see how it works.
 Please notice that Table.js has not been tested in production. If you notice any bugs, please let me know.
 
 
-    Copyright (C) 2015  Johannes Giere
+    Copyright (C) 2016  Johannes Giere
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
