@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016  Johannes Giere
+	Copyright (C) 2017  Johannes Giere
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@ Table.prototype.Template = null;
 
 Table.prototype.View = null;
 
-function Table(elementKeys, options) {
+function Table(elementKeys, options, callback) {
 
 	if(elementKeys != null) {
 		if(options['elements'] != null && options['templateUrl'] != null) {
@@ -26,7 +26,7 @@ function Table(elementKeys, options) {
 			Table.prototype.Elements = options['elements'];
 			Table.prototype.ElementKeys = elementKeys;
 
-			this.loadTemplate(options['templateUrl']);
+			this.loadTemplate(options['templateUrl'], callback);
 		} else if(options['elements'] == null && options['templateUrl'] == null) {
 			// Will be executed when the elements exist as a ready table or list.
 			Table.prototype.ElementKeys = elementKeys;
@@ -34,6 +34,8 @@ function Table(elementKeys, options) {
 			this.loadHtml();
 
 			Table.prototype.parseTemplate(Table.prototype.Template, Table.prototype.Elements, Table.prototype.ElementKeys);
+
+			callback(this);
 		} else {
 			console.log('Cannot load template url, parse template or find your specified template.');
 		}
@@ -116,7 +118,7 @@ Table.prototype.loadHtml = function() {
 /* Loads template from specified url with http get call (ajax).
  *
  */
-Table.prototype.loadTemplate = function (url) {
+Table.prototype.loadTemplate = function (url, callback) {
 	var httpRequest;
 	if (window.XMLHttpRequest) {
 		httpRequest = new XMLHttpRequest();
@@ -124,19 +126,20 @@ Table.prototype.loadTemplate = function (url) {
 		httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
 	}
 
+	var self = this;
 	//Parsing template after fetching it.
 	httpRequest.onreadystatechange = function() {
 		if (httpRequest.readyState === 4) {
 			Table.prototype.Template = httpRequest.responseText;
 
 			Table.prototype.parseTemplate(Table.prototype.Template, Table.prototype.Elements, Table.prototype.ElementKeys);
-		} else {
 
+			callback(self);
 		}
 	};
 
 	//Request the specified template via HTTP-GET call.
-    httpRequest.open("GET", url, false);
+    httpRequest.open("GET", url, true);
 	httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 	httpRequest.send(null);
 }
