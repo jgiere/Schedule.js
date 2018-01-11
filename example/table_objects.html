@@ -3,92 +3,100 @@
 	Developed by Johannes Giere, jogiere AT gmail DOT com
 -->
 <html lang="de">
-	<head>
-		<title></title>
+<head>
+    <title></title>
 
-		<script src="../table.js"></script>
-		<script src="template.html"></script>
-	</head>
-	<body onload="doIt()">
-		<script>
+    <meta charset="UTF-8">
 
-			function doIt() {
-				var elements = [
-					{
-						'day': '2. Sunday after Christmas',
-						'date': '26.12.2015',
-						'time': '10:30',
-						'place': 'Church Timmerlah'
-					},
-					{
-						'day': 'New Years Eve',
-						'date': '31.12.2015',
-						'time': '19:00',
-						'place': 'Church Sonnenberg'
-					},
-					{
-						'day': '1. Sunday after Christmas',
-						'date': '25.12.2015',
-						'time': '11:30',
-						'place': 'Church Sonnenberg'
-					},
-					{
-						'day': 'Christmas Eve',
-						'date': '24.12.2015',
-						'time': '18:30',
-						'place': 'Church Sonnenberg'
-					}
-				];
+    <script src="../table.js"></script>
+</head>
+<body onload="doIt()">
+<script>
 
-				var elementKeys = ["day", "date", "time", "place"];
+    function doIt() {
+        let elements = [
+            {
+                'day': '2. Sunday after Christmas',
+                'date': '26.12.2015',
+                'time': '10:30',
+                'place': 'Church Timmerlah'
+            },
+            {
+                'day': 'New Years Eve',
+                'date': '31.12.2015',
+                'time': '19:00',
+                'place': 'Church Sonnenberg'
+            },
+            {
+                'day': '1. Sunday after Christmas',
+                'date': '25.12.2015',
+                'time': '11:30',
+                'place': 'Church Sonnenberg'
+            },
+            {
+                'day': 'Christmas Eve',
+                'date': '24.12.2015',
+                'time': '18:30',
+                'place': 'Church Sonnenberg'
+            }
+        ];
 
-				var templateUrl = 'template.html';
+        let elementKeys = ["day", "date", "time", "place"];
 
-				table = new Table(elementKeys, { 'elements': elements, 'templateUrl': templateUrl } );
-				document.getElementById("listView").innerHTML = table.View;
-			}
+        let templateUrl = 'template.html';
 
-			function search() {
-				var phrase = document.getElementById('searchText').value;
+        table = new Table(elementKeys, {'elements': elements, 'templateUrl': templateUrl}, function (table) {
+            document.getElementById("listView").innerHTML = table.View;
 
-				if(phrase != '') {
-					var searchResult = table.search(phrase);
-					document.getElementById("listView").innerHTML = table.redrawView(searchResult);
-				} else {
-					document.getElementById("listView").innerHTML = table.redrawView(table.Elements);
-				}
-			}
+        });
 
-			function sortBasedOnDateAsc() {
-				document.getElementById("listView").innerHTML = table.redrawView(table.sort(table.Elements, 'date', { asc: true, type:'datetime' } ));
-			}
-			function sortBasedOnDateDesc() {
-				document.getElementById("listView").innerHTML = table.redrawView(table.sort(table.Elements, 'date', { asc: false, type:'datetime' } ));
-			}
-			function doFiltering() {
-				document.getElementById("listView").innerHTML = table.redrawView(table.filter(
-					function(a) {
-							if(a > '11:00') {
-								return true;
-							} else {
-								return false;
-							}
-						},
-					'time'));
-			}
-		</script>
+    }
 
-		<input type="text" placeholder="Search" id="searchText"/>
-		<button onclick="search()">Search</button>
-		----
-		<button onclick="doFiltering()">Filter</button>
+    function search() {
+        let phrase = document.getElementById('searchText').value;
 
-		<button onclick="sortBasedOnDateAsc()">Sort on time ASC</button>
-		<button onclick="sortBasedOnDateDesc()">Sort on time DESC</button>
+        if (phrase !== '') {
+            let searchResult = table.search(phrase);
+            document.getElementById("listView").innerHTML = table.redrawView(searchResult);
+        } else {
+            document.getElementById("listView").innerHTML = table.redrawView(table.Elements);
+        }
+    }
+
+    function sortBasedOnDateAsc() {
+        document.getElementById("listView").innerHTML = table.redrawView(table.sort(table.Elements, 'date', {
+            asc: true,
+            type: 'datetime'
+        }));
+    }
+
+    function sortBasedOnDateDesc() {
+        document.getElementById("listView").innerHTML = table.redrawView(table.sort(table.Elements, 'date', {
+            asc: false,
+            type: 'datetime'
+        }));
+    }
+
+    function doFiltering() {
+        document.getElementById("listView").innerHTML = table.redrawView(table.filter(
+            function (a) {
+                return a > '11:00';
+            },
+            'time'));
+    }
+</script>
+
+<input type="text" placeholder="Search" id="searchText"/>
+<button onclick="search()">Search</button>
+----
+<button onclick="doFiltering()">Filter</button>
+
+<button onclick="sortBasedOnDateAsc()">Sort on time ASC</button>
+<button onclick="sortBasedOnDateDesc()">Sort on time DESC</button>
 
 
-		<div id="listView">
+<div id="listView">
 
-		</div>
-	</body>
+</div>
+</body>
 </html>
