@@ -59,7 +59,7 @@
             let searchResult = table.search(phrase);
             document.getElementById("listView").innerHTML = table.redrawView(searchResult);
         } else {
-            document.getElementById("listView").innerHTML = table.redrawView(table.Elements);
+            document.getElementById("listView").innerHTML = table.redrawView();
         }
     }
 
