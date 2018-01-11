@@ -15,10 +15,18 @@
 
 class Table {
     /**
+     * Constructor for the object
      *
      * @param elementKeys
+     *  The property keys of the elements to handle.
+     *
      * @param options
+     *  Options:
+     *      elements: The element content for the list as an array
+     *      templateUrl: The url for the template.
+     *
      * @param callback
+     *  The callback function, which will be executed when all loading has finished and the view has been created.
      */
     constructor(elementKeys = [], options = {}, callback) {
         this._Elements = [];
@@ -409,7 +417,7 @@ class Table {
     }
 
     /**
-     * Provide your own filterFuntion to filter on your own.
+     * Provide your own filterFunction to filter on your own.
      *
      * @param filterFunction
      * @param keyType
