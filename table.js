@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2017  Johannes Giere
+	Copyright (C) 2018  Johannes Giere
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -343,6 +343,8 @@ Table.prototype.sort = function (elements, property, options) {
 /* Provide your own filterFuntion to filter on your own.
  */
 Table.prototype.filter = function (filterFunction, keyType) {
+	// TODO: Prüfen, ob filterFunction eine Funktion ist und keyType nicht leer und der Key wirklich existiert, ansonsten ---> Error schmeißen
+    // TODO: Wenn der keyType leer ist, so wird das gesamte Objekt zurückgegeben.
 	var collection = [];
 	for(var i = 0; i < Table.prototype.Elements.length; i++) {
 		if(filterFunction(Table.prototype.Elements[i][keyType])) {
